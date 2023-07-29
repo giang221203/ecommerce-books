@@ -13,13 +13,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { resetUser } from '../../redux/slides/userSlide';
 import Loading from '../LoadingComponent/Loading';
+import { searchProduct } from '../../redux/slides/productSlide';
 const HeaderComponent = ({ isHiddenSearch=false, isHiddenCart=false}) => {
   const user = useSelector((state) => state.user)
   const [loading, setLoading] = useState(false)
   const [userName, setUserName] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
+  const [search,setSearch] = useState('')
   const dispatch = useDispatch();
-  console.log('u',user);
   const navigate = useNavigate()
   const handleNavigateLogin = () => {
     navigate('/sign-in')
@@ -48,7 +49,10 @@ const HeaderComponent = ({ isHiddenSearch=false, isHiddenCart=false}) => {
     </div>
   )
 
-
+  const onSearch = (e) => {
+    setSearch(e.target.value)
+    dispatch(searchProduct(e.target.value))
+  }
 
     return (
         <div style={{  heiht: '100%', width: '100%', display: 'flex',background: '#9255FD', justifyContent: 'center' }}>
@@ -63,7 +67,7 @@ const HeaderComponent = ({ isHiddenSearch=false, isHiddenCart=false}) => {
               bordered={false}
               textButton="Tìm kiếm"
               placeholder="input search text"
-            //   onChange={onSearch}
+              onChange={onSearch}
               backgroundColorButton="#5a20c1"
               />
           </Col>
