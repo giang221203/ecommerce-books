@@ -22,7 +22,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false)
   const [limit, setLimit] = useState(6)
   const searchProduct = useSelector((state) => state?.product?.search)
-  const searchDebounce = useDebounce(searchProduct,1000)
+  const searchDebounce = useDebounce(searchProduct,500)
   const [typeProducts, setTypeProducts] = useState([])
   const fetchProductAll = async (context) =>{
     const limit = context?.queryKey && context.queryKey[1]

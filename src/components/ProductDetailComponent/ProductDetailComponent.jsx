@@ -1,23 +1,31 @@
 import { Col, Image, Rate, Row } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 
 import imageProductSmail from "../../assets/images/imagesmall.webp";
 import { WrapperAddressProduct, WrapperInputNumber, WrapperPriceProduct, WrapperPriceTextProduct, WrapperQualityProduct, WrapperStyleColImage, WrapperStyleImageSmall, WrapperStyleNameProduct } from "./style";
 import { WrapperStyleTextSell } from "../CardCompunent/style";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import * as ProductService from '../../services/ProductService'
+import * as ProductService from '../../services/ProductService';
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { addOrderProduct } from '../../redux/slides/orderSlide'
 import Loading from "../LoadingComponent/Loading";
+import { convertPrice } from "../../utils";
 const ProductDetailComponent = ({idProduct}) => {
   const [numProduct, setNumProduct] = useState(1)
   const user = useSelector((state) => state.user)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const dispatch = useDispatch()
   const onChange = (value) => { 
       setNumProduct(Number(value))
   }
   const fetchGetDetailsProduct = async (context) => {
       const id = context?.queryKey && context?.queryKey[1]
+      
+    //   console.log('id',id);x
       if(id) {
           const res = await ProductService.getDetailsProduct(id)
           return res.data
@@ -33,6 +41,32 @@ const ProductDetailComponent = ({idProduct}) => {
   }
 
   const { isLoading, data: productDetails } = useQuery(['product-details', idProduct], fetchGetDetailsProduct, { enabled : !!idProduct})
+  const handleAddOrderProduct = () => {
+    if(!user?.id) {
+        navigate('/sign-in', {state: location?.pathname})
+    }else {
+        // {
+        //     name: { type: String, required: true },
+        //     amount: { type: Number, required: true },
+        //     image: { type: String, required: true },
+        //     price: { type: Number, required: true },
+        //     product: {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         ref: 'Product',
+        //         required: true,
+        //     },
+        // },
+        dispatch(addOrderProduct({
+            orderItem: {
+                name: productDetails?.name,
+                amount: numProduct,
+                image: productDetails?.image,
+                price: productDetails?.price,
+                product: productDetails?._id
+            }
+        }))
+    }
+}
   
   return (
     <Loading isLoading={isLoading}>
@@ -75,7 +109,7 @@ const ProductDetailComponent = ({idProduct}) => {
                         <WrapperStyleTextSell> | Da ban 1000+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
-                        <WrapperPriceTextProduct>{productDetails?.price}</WrapperPriceTextProduct>
+                        <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
                     </WrapperPriceProduct>
                     <WrapperAddressProduct>
                         <span>Giao đến </span>
@@ -104,6 +138,7 @@ const ProductDetailComponent = ({idProduct}) => {
                                 border: 'none',
                                 borderRadius: '4px'
                             }}
+                            onClick={handleAddOrderProduct}
                             textButton={'Chọn mua'}
                             styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
