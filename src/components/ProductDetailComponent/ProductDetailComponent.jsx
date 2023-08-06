@@ -139,7 +139,7 @@ const ProductDetailComponent = ({idProduct}) => {
                                 borderRadius: '4px'
                             }}
                             onClick={handleAddOrderProduct}
-                            textButton={'Chọn mua'}
+                            textButton={'Thêm vào giỏ hàng'}
                             styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                         <ButtonComponent
