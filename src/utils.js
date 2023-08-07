@@ -65,11 +65,12 @@ export const getBase64 = (file) =>
             cookie: true, // enable cookies to allow the server to access
             // the session
             xfbml: true, // parse social plugins on this page
-            version: "v2.1" // use version 2.1
+            version: "v8.6" // use version 2.1
           });
         };
         // Load the SDK asynchronously
         (function (d, s, id) {
+          console.log(s);
           var js,
             fjs = d.getElementsByTagName(s)[0];
           if (d.getElementById(id)) return;
@@ -79,26 +80,3 @@ export const getBase64 = (file) =>
           fjs.parentNode.insertBefore(js, fjs);
         })(document, "script", "facebook-jssdk");
       };
-    
-      export const convertDataChart = (data, type) => {
-        try {
-            const object = {}
-            Array.isArray(data) && data.forEach((opt) => {
-                if(!object[opt[type]]) {
-                    object[opt[type]] = 1
-                } else {
-                    object[opt[type]]+=1
-                    console.log('c;getBase64', object[opt[type]], typeof(object[opt[type]]))
-                }
-            })
-            const results = Array.isArray(Object.keys(object)) && Object.keys(object).map((item) => {
-                return {
-                    name: orderContant.payment[item],
-                    value: object[item]
-                }
-            })
-            return results
-        }catch(e) {
-            return []
-        }
-      }

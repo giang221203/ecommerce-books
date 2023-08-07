@@ -16,7 +16,8 @@ import * as message from '../../components/Mesage/Message.jsx'
 import { updateUser } from '../../redux/slides/userSlide';
 import { useNavigate } from 'react-router-dom';
 import { removeAllOrderProduct } from '../../redux/slides/orderSlide';
-
+import { PayPalButton } from 'react-paypal-button-v2';
+import * as PaymentService from '../../services/PaymentService'
 const PaymentPage = () => {
   const order = useSelector((state) => state.order)
   const user = useSelector((state) => state.user)
@@ -24,6 +25,7 @@ const PaymentPage = () => {
   const [delivery, setDelivery] = useState('fast')
   const [payment, setPayment] = useState('later_money')
   const navigate = useNavigate()
+    const [sdkReady , setSdkReady] = useState(false)
 
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false)
   const [stateUserDetails, setStateUserDetails] = useState({
@@ -65,7 +67,8 @@ const PaymentPage = () => {
 
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      return total + ((cur.discount * cur.amount))
+      const totalDiscount = cur.discount ? cur.discount : 0
+      return total + (priceMemo * (totalDiscount  * cur.amount) / 100)
     },0)
     if(Number(result)){
       return result
@@ -74,9 +77,9 @@ const PaymentPage = () => {
   },[order])
 
   const diliveryPriceMemo = useMemo(() => {
-    if(priceMemo > 200000){
+    if(priceMemo > 200000 && priceMemo < 500000){
       return 10000
-    }else if(priceMemo === 0 ){
+    }else if(priceMemo >= 500000 || order?.orderItemsSlected?.length === 0 ){
       return 0
     }else {
       return 20000
@@ -103,7 +106,8 @@ const PaymentPage = () => {
             itemsPrice: priceMemo,
             shippingPrice: diliveryPriceMemo,
             totalPrice: totalPriceMemo,
-            user: user?.id
+            user: user?.id,
+            email: user?.email
           }
         )
       }
@@ -166,6 +170,27 @@ const PaymentPage = () => {
     form.resetFields()
     setIsOpenModalUpdateInfo(false)
   }
+
+  const onSuccessPaypal = (details, data) => {
+    mutationAddOrder.mutate(
+      { 
+        token: user?.access_token, 
+        orderItems: order?.orderItemsSlected, 
+        fullName: user?.name,
+        address:user?.address, 
+        phone:user?.phone,
+        city: user?.city,
+        paymentMethod: payment,
+        itemsPrice: priceMemo,
+        shippingPrice: diliveryPriceMemo,
+        totalPrice: totalPriceMemo,
+        user: user?.id,
+        isPaid :true,
+        paidAt: details.update_time
+      }
+    )
+  }
+
   const handleUpdateInforUser = () => {
     const {name, address,city, phone} = stateUserDetails
     if(name && address && city && phone){
@@ -191,7 +216,26 @@ const PaymentPage = () => {
   const handlePayment = (e) => {
     setPayment(e.target.value)
   }
+ 
+  const addPaypalScript = async () => {
+    const { data } = await PaymentService.getConfig()
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = `https://www.paypal.com/sdk/js?client-id=${data}`
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true)
+    }
+    document.body.appendChild(script)
+  }
 
+  useEffect(() => {
+    if(!window.paypal) {
+      addPaypalScript()
+    }else {
+      setSdkReady(true)
+    }
+  }, [])
   return (
     <div style={{background: '#f5f5fa', with: '100%', height: '100vh'}}>
       <Loading isLoading={isLoadingAddOrder}>
@@ -202,7 +246,7 @@ const PaymentPage = () => {
               <WrapperInfo>
                 <div>
                   <Lable>Chọn phương thức giao hàng</Lable>
-                  <WrapperRadio onChange={handleDilivery} value={delivery}> 
+                  <WrapperRadio onChange={handleDilivery} value={delivery} delivery={delivery}> 
                     <Radio  value="fast"><span style={{color: '#ea8500', fontWeight: 'bold'}}>FAST</span> Giao hàng tiết kiệm</Radio>
                     <Radio  value="gojek"><span style={{color: '#ea8500', fontWeight: 'bold'}}>GO_JEK</span> Giao hàng tiết kiệm</Radio>
                   </WrapperRadio>
@@ -213,6 +257,7 @@ const PaymentPage = () => {
                   <Lable>Chọn phương thức thanh toán</Lable>
                   <WrapperRadio onChange={handlePayment} value={payment}> 
                     <Radio value="later_money"> Thanh toán tiền mặt khi nhận hàng</Radio>
+                    <Radio value="paypal"> Thanh toán tiền bằng paypal</Radio>
                   </WrapperRadio>
                 </div>
               </WrapperInfo>
@@ -233,7 +278,7 @@ const PaymentPage = () => {
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <span>Giảm giá</span>
-                    <span style={{color: '#000', fontSize: '14px', fontWeight: 'bold'}}>{`${priceDiscountMemo} %`}</span>
+                    <span style={{color: '#000', fontSize: '14px', fontWeight: 'bold'}}>{convertPrice(priceDiscountMemo)}</span>
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <span>Phí giao hàng</span>
@@ -248,19 +293,32 @@ const PaymentPage = () => {
                   </span>
                 </WrapperTotal>
               </div>
-              <ButtonComponent
-                onClick={() => handleAddOrder()}
-                size={40}
-                styleButton={{
-                    background: 'rgb(255, 57, 69)',
-                    height: '48px',
-                    width: '320px',
-                    border: 'none',
-                    borderRadius: '4px'
-                }}
-                textButton={'Đặt hàng'}
-                styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
-            ></ButtonComponent>
+              {payment === 'paypal' && sdkReady ? (
+                <div style={{width: '320px'}}>
+                  <PayPalButton
+                    amount={Math.round(totalPriceMemo / 30000)}
+                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                    onSuccess={onSuccessPaypal}
+                    onError={() => {
+                      alert('Erroe')
+                    }}
+                  />
+                </div>
+              ) : (
+                <ButtonComponent
+                  onClick={() => handleAddOrder()}
+                  size={40}
+                  styleButton={{
+                      background: 'rgb(255, 57, 69)',
+                      height: '48px',
+                      width: '320px',
+                      border: 'none',
+                      borderRadius: '4px'
+                  }}
+                  textButton={'Đặt hàng'}
+                  styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
+              ></ButtonComponent>
+              )}
             </WrapperRight>
           </ditoánv>
         </div>
