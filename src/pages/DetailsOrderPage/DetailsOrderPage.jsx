@@ -69,8 +69,9 @@ const DetailsOrderPage = () => {
             <WrapperItemLabel>Giảm giá</WrapperItemLabel>
           </div>
           {data?.orderItems?.map((order) => {
+            console.log(order);
             return (
-              <WrapperProduct>
+              <WrapperProduct key={order._id}>
                 <WrapperNameProduct>
                   <img src={order?.image} 
                     style={{
@@ -88,11 +89,11 @@ const DetailsOrderPage = () => {
                     whiteSpace:'nowrap',
                     marginLeft: '10px',
                     height: '70px',
-                  }}>Điện thoại</div>
+                  }}>{order?.name}</div>
                 </WrapperNameProduct>
                 <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
                 <WrapperItem>{order?.amount}</WrapperItem>
-                <WrapperItem>{order?.discount ? convertPrice(priceMemo * order?.discount / 100) : '0 VND'}</WrapperItem>
+                <WrapperItem>{order?.discount ? convertPrice(Number(priceMemo) * Number(order?.discount) / 100) : '0 VND'}</WrapperItem>
 
 
               </WrapperProduct>

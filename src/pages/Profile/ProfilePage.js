@@ -91,7 +91,7 @@ const handleUpdate = () => {
                                 borderRadius: '4px',
                                 padding: '2px 6px 6px'
                             }}
-                            textButton={'Cập nhật'}
+                            textbutton={'Cập nhật'}
                             styleTextButton={{ color: 'rgb(26, 148, 255)', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                     </WrapperInput>
@@ -107,7 +107,7 @@ const handleUpdate = () => {
                                 borderRadius: '4px',
                                 padding: '2px 6px 6px'
                             }}
-                            textButton={'Cập nhật'}
+                            textbutton={'Cập nhật'}
                             styleTextButton={{ color: 'rgb(26, 148, 255)', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                     </WrapperInput>
@@ -123,7 +123,7 @@ const handleUpdate = () => {
                                 borderRadius: '4px',
                                 padding: '2px 6px 6px'
                             }}
-                            textButton={'Cập nhật'}
+                            textbutton={'Cập nhật'}
                             styleTextButton={{ color: 'rgb(26, 148, 255)', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                     </WrapperInput>
@@ -150,7 +150,7 @@ const handleUpdate = () => {
                                 borderRadius: '4px',
                                 padding: '2px 6px 6px'
                             }}
-                            textButton={'Cập nhật'}
+                            textbutton={'Cập nhật'}
                             styleTextButton={{ color: 'rgb(26, 148, 255)', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                     </WrapperInput>
@@ -166,7 +166,7 @@ const handleUpdate = () => {
                                 borderRadius: '4px',
                                 padding: '2px 6px 6px'
                             }}
-                            textButton={'Cập nhật'}
+                            textbutton={'Cập nhật'}
                             styleTextButton={{ color: 'rgb(26, 148, 255)', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                     </WrapperInput>

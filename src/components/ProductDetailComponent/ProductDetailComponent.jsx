@@ -16,6 +16,7 @@ import { convertPrice, initFacebookSDK } from '../../utils'
 import * as message from '../Mesage/Message'
 import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
 import CommentComponent from '../CommentComponent/CommentComponent'
+import { useMemo } from 'react'
 const ProductDetailComponent = ({idProduct}) => {
   const [numProduct, setNumProduct] = useState(1)
   const user = useSelector((state) => state.user)
@@ -45,7 +46,7 @@ useEffect(() => {
     const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id) 
     if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
         setErrorLimitOrder(false)
-    } else {
+    } else if(productDetails?.countInStock === 0){
         setErrorLimitOrder(true)
     }
 },[numProduct])
@@ -144,7 +145,12 @@ const handleChangeCount = (type, limited) => {
                         <span className='address'>{user?.address}</span> -
                         <span className='change-address'>Đổi địa chỉ</span>
                     </WrapperAddressProduct>
-                    <LikeButtonComponent dataHref={"https://developers.facebook.com/docs/plugins/"} />
+                    <LikeButtonComponent
+                     dataHref={
+                                 "https://developers.facebook.com/docs/plugins/" 
+
+                            } 
+                    />
                     <div style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5' }}>
                         <div style={{ marginBottom: '10px' }}>Số lượng</div>
                         <WrapperQualityProduct>
@@ -169,7 +175,7 @@ const handleChangeCount = (type, limited) => {
                                     borderRadius: '4px'
                                 }}
                                 onClick={handleAddOrderProduct}
-                                textButton={'Chọn mua'}
+                                textbutton={'Chọn mua'}
                                 styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                             ></ButtonComponent>
                             {errorLimitOrder && <div style={{color: 'red'}}>San pham het hang</div>}
@@ -183,12 +189,18 @@ const handleChangeCount = (type, limited) => {
                                 border: '1px solid rgb(13, 92, 182)',
                                 borderRadius: '4px'
                             }}
-                            textButton={'Mua trả sau'}
+                            textbutton={'Mua trả sau'}
                             styleTextButton={{ color: 'rgb(13, 92, 182)', fontSize: '15px' }}
                         ></ButtonComponent>
                     </div>
                 </Col>
-                <CommentComponent dataHref={"https://developers.facebook.com/docs/plugins/comments#configurator"} width="1270" />
+                <CommentComponent 
+                    dataHref={
+                        "https://developers.facebook.com/docs/plugins/comments#configurator"
+                        
+                    } 
+                    width="1270" 
+                />
             </Row >
         </Loading>
   );

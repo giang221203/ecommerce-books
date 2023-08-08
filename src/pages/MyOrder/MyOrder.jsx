@@ -13,7 +13,6 @@ import * as message from '../../components/Mesage/Message'
 const MyOrderPage = () => {
   const location = useLocation()
   const { state } = location
-  console.log('state',state);
   const navigate = useNavigate()
   const fetchMyOrder = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token)
@@ -52,14 +51,16 @@ const MyOrderPage = () => {
   useEffect(() => {
     if (isSuccessCancel && dataCancel?.status === 'OK') {
       message.success()
-    } else if (isErrorCancle) {
+    } else if(isSuccessCancel && dataCancel?.status === 'ERR') {
+      message.error(dataCancel?.message)
+    }else if (isErrorCancle) {
       message.error()
     }
   }, [isErrorCancle, isSuccessCancel])
 
   const renderProduct = (data) => {
     return data?.map((order) => {
-      return <WrapperHeaderItem> 
+      return <WrapperHeaderItem key={order?._id}> 
               <img src={order?.image} 
                 style={{
                   width: '70px', 
@@ -112,7 +113,7 @@ const MyOrderPage = () => {
                             border: '1px solid rgb(11, 116, 229)',
                             borderRadius: '4px'
                         }}
-                        textButton={'Hủy đơn hàng'}
+                        textbutton={'Hủy đơn hàng'}
                         styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
                       >
                       </ButtonComponent>
@@ -124,7 +125,7 @@ const MyOrderPage = () => {
                             border: '1px solid rgb(11, 116, 229)',
                             borderRadius: '4px'
                         }}
-                        textButton={'Xem chi tiết'}
+                        textbutton={'Xem chi tiết'}
                         styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
                       >
                       </ButtonComponent>
