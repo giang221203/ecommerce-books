@@ -40,7 +40,6 @@ const SignInPage = () => {
         localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token))
         if (data?.access_token) {
           const decoded = jwt_decode(data?.access_token)
-          console.log('dc',decoded);
           if (decoded?.id) {
             handleGetDetailsUser(decoded?.id, data?.access_token)
           }
@@ -52,7 +51,6 @@ const SignInPage = () => {
       const refreshToken = JSON.parse(storage)
       const res = await UserService.getDetailsUser(id, token)
       dispatch(updateUser({ ...res?.data, access_token: token,refreshToken }))
-      console.log('res',res);
     }
   
     const navigate = useNavigate()
