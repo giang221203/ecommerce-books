@@ -1,8 +1,7 @@
-import React,{ useEffect, useState } from 'react'
+import React,{ useEffect} from 'react'
 import Loading from '../../components/LoadingComponent/Loading';
 import { useQuery } from '@tanstack/react-query';
 import * as OrderService from '../../services/OrderService'
-import { useSelector } from 'react-redux';
 import { convertPrice } from '../../utils';
 import { WrapperItemOrder, WrapperListOrder, WrapperHeaderItem, WrapperFooterItem, WrapperContainer, WrapperStatus } from './style';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
@@ -56,12 +55,13 @@ const MyOrderPage = () => {
     }else if (isErrorCancle) {
       message.error()
     }
-  }, [isErrorCancle, isSuccessCancel])
+  }, [isErrorCancle,isSuccessCancel])
 
   const renderProduct = (data) => {
     return data?.map((order) => {
       return <WrapperHeaderItem key={order?._id}> 
               <img src={order?.image} 
+              alt=''
                 style={{
                   width: '70px', 
                   height: '70px', 
@@ -84,8 +84,8 @@ const MyOrderPage = () => {
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>
       <WrapperContainer>
-        <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
-          <h4>Đơn hàng của tôi</h4>
+        <div style={{height: '100%', width: '1270px', margin: '0px auto',padding:'25px 0'}}>
+          <h4 className='text-center text-[20px]'>Đơn hàng của tôi</h4>
           <WrapperListOrder>
           {data?.map((order) => {
 

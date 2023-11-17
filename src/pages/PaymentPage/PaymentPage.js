@@ -199,6 +199,7 @@ const PaymentPage = () => {
         onSuccess: () => {
           dispatch(updateUser({name, address,city, phone}))
           setIsOpenModalUpdateInfo(false)
+          
         }
       })
     }

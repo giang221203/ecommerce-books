@@ -83,11 +83,14 @@ export const orderSlide = createSlice({
         };
       });
       state.orderItemsSlected = orderSelected
-    }
+    },
+    clearCart: (state) => {
+      state.orderItems = [];
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct,increaseAmount,decreaseAmount,removeOrderProduct,removeAllOrderProduct,selectedOrder,resetOrder   } = orderSlide.actions
+export const {clearCart, addOrderProduct,increaseAmount,decreaseAmount,removeOrderProduct,removeAllOrderProduct,selectedOrder,resetOrder   } = orderSlide.actions
 
 export default orderSlide.reducer

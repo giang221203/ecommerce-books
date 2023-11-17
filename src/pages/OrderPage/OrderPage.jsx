@@ -15,7 +15,7 @@ import { updateUser } from '../../redux/slides/userSlide';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
 import InputComponent from '../../components/InputComponent/InputComponent';
 import Loading from '../../components/LoadingComponent/Loading';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import StepComponent from '../../components/StepComponent/StepComponent';
 
 const OrderPage = () => {
@@ -203,10 +203,10 @@ const OrderPage = () => {
   ]
 
   return (
-    <div style={{background: '#f5f5fa', with: '100%', height: '100vh'}}>
-      <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
+    <div style={{background: '#f5f5fa', width: '100%'}}>
+      <div style={{height: '100%', width: '1280px', margin: '0px auto', paddingTop:'15px 0',paddingBottom:'30px'}}>
         <h3>Giỏ hàng</h3>
-        <div style={{ display: 'flex', justifyContent: 'center'}}>
+        {user?.access_token  ? (<div style={{ display: 'flex', justifyContent: 'center'}}>
           <WrapperLeft>
           <WrapperStyleHeaderDilivery>
               <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000 
@@ -231,7 +231,7 @@ const OrderPage = () => {
                   <WrapperItemOrder key={order?.product}>
                 <div style={{width: '390px', display: 'flex', alignItems: 'center', gap: 4}}> 
                   <Checkbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></Checkbox>
-                  <img src={order?.image} style={{width: '77px', height: '79px', objectFit: 'cover'}}/>
+                  <img src={order?.image} alt='' style={{width: '77px', height: '79px', objectFit: 'cover'}}/>
                   <div style={{
                     width: 260,
                     overflow: 'hidden',
@@ -306,7 +306,34 @@ const OrderPage = () => {
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
           ></ButtonComponent>
           </WrapperRight>
+        </div>) : (<div className="container-fluid  mt-[100px]">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="mb-[30px] tracking-[1px]">
+              <div className="p-[30px]">
+                <div className="col-sm-12 empty-cart-cls text-center">
+                  <img
+                    className='img-fluid mb-4 w-[130px] h-[130px] mx-auto pr-10'
+                    src='https://i.imgur.com/dCdflKN.png'
+                    alt=""
+                  />
+                  <h3>
+                    <strong>Your Cart is Empty</strong>
+                  </h3>
+                  <h4>Add something to make me happy :)</h4>
+                  <Link
+                    to="/"
+                    className="btn btn-primary cart-btn-transform m-3"
+                    data-abc="true"
+                  >
+                    continue shopping
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>)}
       </div>
 
     <ModalComponent title="Cập nhật thông tin giao hàng" open={isOpenModalUpdateInfo} onCancel={handleCancleUpdate} onOk={handleUpdateInforUser}>

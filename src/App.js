@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import './index.css'
+import './App.css'
 import { routes } from "./routes";
 import DefaultComponent from "./components/DefaultComponnent/DefaultComponent";
 import { isJsonString } from "./utils"; 
@@ -64,7 +65,7 @@ function App() {
   };
 
   return (
-    <div style={{height: '100vh', width: '100%'}}>
+    <div>
       <Loading isLoading={isLoading}>
       <Router>
         <Routes>

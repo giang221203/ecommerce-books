@@ -331,7 +331,7 @@ const AdminUser = () => {
   
 
     const handleOnchangeDetails = (e) => {
-      console.log('check',e.target.name,e.target.value);
+      // console.log('check',e.target.name,e.target.value);
       setStateUserDetails({
         ...stateUserDetails,
         [e.target.name]: e.target.value

@@ -17,6 +17,7 @@ export const WrapperButtonMore = styled(ButtonComponent)`
             color: #fff;
         }
     }
+    background-color:linear-gradient(to right, #ff9800, #F7695D)
     width: 100%;
     color: #9255FD;
     text-align: center;
@@ -26,6 +27,6 @@ export const WrapperButtonMore = styled(ButtonComponent)`
 export const WrapperProducts = styled.div`
     display: flex;
     gap: 14px;
-    margin-top:20px;
+    margin: 20px ;
     flex-wrap: wrap;
 `

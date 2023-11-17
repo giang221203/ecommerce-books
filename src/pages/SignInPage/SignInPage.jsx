@@ -29,13 +29,15 @@ const SignInPage = () => {
     )
     const { data, isLoading ,isSuccess} = mutation
     useEffect(() => {
-      if (isSuccess) {
+      if (data?.status === 'OK') {
         message.success()
         if(location?.state) {
           navigate(location?.state)
         }else {
           navigate('/')
         }
+        const cartData = JSON.parse(localStorage.getItem('persist:root')) || [];
+    console.log(cartData)
         localStorage.setItem('access_token', JSON.stringify(data?.access_token))
         localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token))
         if (data?.access_token) {
@@ -45,7 +47,7 @@ const SignInPage = () => {
           }
         }
       }
-    }, [isSuccess])
+    }, [data])
     const handleGetDetailsUser = async (id, token) => {
       const storage = localStorage.getItem('refresh_token')
       const refreshToken = JSON.parse(storage)
@@ -69,7 +71,7 @@ const SignInPage = () => {
           email,
           password
         })
-        console.log('logingloin',email,password)
+        // console.log('logingloin',email,password)
       }
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0, 0, 0, 0.53)', height: '100vh' }}>

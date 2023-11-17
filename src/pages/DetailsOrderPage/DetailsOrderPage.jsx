@@ -1,8 +1,6 @@
 import React from 'react'
 import { WrapperAllPrice, WrapperContentInfo, WrapperHeaderUser, WrapperInfoUser, WrapperItem, WrapperItemLabel, WrapperLabel, WrapperNameProduct, WrapperProduct, WrapperStyleContent } from './style'
-import logo from '../../assets/images/logo.png'
 import { useLocation, useParams } from 'react-router-dom'
-import { useEffect } from 'react'
 import * as OrderService from '../../services/OrderService'
 import { useQuery } from '@tanstack/react-query'
 import { orderContant } from '../../contant'
@@ -24,7 +22,7 @@ const DetailsOrderPage = () => {
     enabled: id
   })
   const { isLoading, data } = queryOrder
-  console.log('data',data);
+  // console.log('data',data);
 
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
@@ -35,9 +33,9 @@ const DetailsOrderPage = () => {
 
   return (
    <Loading isLoading={isLoading}>
-     <div style={{width: '100%', height: '100vh', background: '#f5f5fa'}}>
-      <div style={{ width: '1270px', margin: '0 auto'}}>
-        <h4>Chi tiết đơn hàng</h4>
+     <div style={{width: '100%', background: '#f5f5fa'}}>
+      <div style={{ width: '1240px', margin: '0 auto' ,padding:'25px 0' }}>
+        <h1 className='text-[20px] pb-5'>Chi tiết đơn hàng</h1>
         <WrapperHeaderUser>
           <WrapperInfoUser>
             <WrapperLabel>Địa chỉ người nhận</WrapperLabel>
@@ -70,11 +68,11 @@ const DetailsOrderPage = () => {
             <WrapperItemLabel>Giảm giá</WrapperItemLabel>
           </div>
           {data?.orderItems?.map((order) => {
-            console.log(order);
             return (
               <WrapperProduct key={order._id}>
                 <WrapperNameProduct>
                   <img src={order?.image} 
+                  alt=''
                     style={{
                       width: '70px', 
                       height: '70px', 
